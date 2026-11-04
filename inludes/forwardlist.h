@@ -3,6 +3,8 @@
 
 template <typename T>
 class ForwardList{
+    
+    public: //небольшой костыль - для одного метода требуется struct Node в public'е, поэтому private ниже
 
     struct Node{
 
@@ -10,10 +12,6 @@ class ForwardList{
         Node* next = nullptr;
         
     };
-
-    Node* first = nullptr;
-
-    public:
 
     void push_front(const T& value){ // вставка в начало
 
@@ -105,4 +103,25 @@ class ForwardList{
     T& front() {
         return first->data;
     }
+    
+    void insert_after(Node* ptr, const T& value){
+        
+        if (ptr == nullptr){ return;}
+
+        Node* tmp = new Node{value, ptr->next};
+        ptr->next = tmp;
+    }
+
+    Node* insert_after_return_ptr(Node* ptr, const T& value){
+        
+        if (ptr == nullptr){ return nullptr;}
+
+        Node* tmp = new Node{value, ptr->next};
+        ptr->next = tmp;
+
+        return tmp;
+    }
+    private:
+
+    Node* first = nullptr;
 };
