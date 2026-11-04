@@ -74,12 +74,17 @@ class ForwardList{
             push_front(arr[i]);
         }
     }
-    ~ForwardList(){
+
+    void clear(){
 
         while (first != nullptr){
             
             pop_front();
         }
+    }
+    ~ForwardList(){
+
+        clear();
     }
 
     ForwardList& operator=(ForwardList forwl){ // здесь вызывается конструктор копирования/перемещения, 
@@ -112,7 +117,7 @@ class ForwardList{
         ptr->next = tmp;
     }
 
-    Node* insert_after_return_ptr(Node* ptr, const T& value){
+    Node* insert_after_and_return_ptr(Node* ptr, const T& value){
         
         if (ptr == nullptr){ return nullptr;}
 
