@@ -1,3 +1,5 @@
+#pragma once
+
 #include "forwardlist.h"
 #include <cstddef>
 
@@ -54,4 +56,8 @@ class Stack{
         list.clear();
         size = 0;
     }
+
+    
+
+
 };
