@@ -6,14 +6,59 @@
 template <typename T>
 class ForwardList{
     
-    public: //небольшой костыль - для одного метода требуется struct Node в public'е, поэтому private ниже
-
     struct Node{
 
         T data;
         Node* next = nullptr;
         
     };
+    
+
+    Node* first = nullptr;
+
+    public: 
+
+    class iterator{
+
+        Node* cur = nullptr;
+
+        friend class ForwardList; // чтобы был доступ к cur
+
+        public:
+
+        iterator() = default;
+
+        iterator(Node* cur) : cur(cur) {}
+
+        T& operator*() const {
+            return cur->data;
+        }
+
+        iterator& operator++()  {
+
+            cur = cur->next;
+            return *this;
+        }
+
+        iterator operator++(int) {
+
+            iterator tmp(cur);
+            cur = cur->next;
+
+            return tmp;
+
+        }
+
+        friend bool operator!=(const iterator& it1, const iterator& it2){
+            return it1.cur != it2.cur;
+        }
+
+        friend bool operator==(const iterator& it1, const iterator& it2){
+            return it1.cur == it2.cur;
+        }
+        
+    };
+   
 
     void push_front(const T& value){ // вставка в начало
 
@@ -98,7 +143,7 @@ class ForwardList{
         // т к время жизни forwl = время работы функции, то после ее завершения вызовется деструктор, который уничтожит forwl
     } 
 
-    bool empty() const noexcept{
+    bool empty() const {
 
         return first == nullptr;
     }
@@ -111,24 +156,34 @@ class ForwardList{
         return first->data;
     }
     
-    void insert_after(Node* ptr, const T& value){
+    iterator insert_after(const iterator& ptr, const T& value){
         
-        if (ptr == nullptr){ return;}
+        if (ptr.cur == nullptr){ return iterator();}
 
-        Node* tmp = new Node{value, ptr->next};
-        ptr->next = tmp;
+        Node* tmp = new Node{value, ptr.cur->next};
+        ptr.cur->next = tmp;
+
+        return iterator(tmp);
     }
 
-    Node* insert_after_and_return_ptr(Node* ptr, const T& value){
-        
-        if (ptr == nullptr){ return nullptr;}
+   iterator erase_after(const iterator& ptr){
 
-        Node* tmp = new Node{value, ptr->next};
-        ptr->next = tmp;
+        if (ptr.cur == nullptr || ptr.cur->next == nullptr){ return iterator();}
 
-        return tmp;
+        Node* tmp = ptr.cur->next;
+        ptr.cur->next = tmp->next;
+
+        delete tmp;
+
+        return ptr;
     }
-    private:
+    
+    iterator begin(){
+        return iterator(first);
+    }
 
-    Node* first = nullptr;
+    iterator end(){
+        return iterator();
+    }
+   
 };
